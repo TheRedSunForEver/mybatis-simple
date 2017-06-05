@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 使用mapper代理时，namespace必须是mapper接口的全限定类名称 -->
+<!-- 接口中的方法名与statement的id一致 -->
+<mapper namespace="org.mybatisstudy.mapper.UserMapper">
+    <select id="findUserById" parameterType="int" resultType="User">
+        select * from user where id = #{id}
+    </select>
+
+
+    <!--
+    index：为数组的下标
+    item：为数组每个元素的名称，名称随意定义
+    open：循环开始
+    close：循环结束
+    separator：中间分隔
+    -->
+    <select id="selectUserByArray" parameterType="Object[]" resultType="User">
+        select * from user
+        <where>
+            <if test="array!=null">
+                <foreach collection="array" index="index" item="id" open="and id in (" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

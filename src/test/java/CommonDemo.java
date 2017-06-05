@@ -9,6 +9,7 @@ import org.mybatisstudy.vo.User;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -56,5 +57,17 @@ public class CommonDemo {
     public void testDel() {
         session.delete("test.deleteUser", 34);
         session.commit();
+    }
+
+    @Test
+    public void testInQuery() {
+        List<Integer> idList = new ArrayList<>();
+        idList.add(10);
+        idList.add(16);
+
+        List<User> userList = session.selectList("test.selectUserByList", idList);
+        for (User u : userList) {
+            System.out.println(u.getUsername());
+        }
     }
 }
