@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace:命名空间，对statement的信息进行分类管理 -->
+<mapper namespace="test">
+
+    <!-- select:表示一个MappedStatement对象 -->
+    <!-- id:statement的唯一标识 -->
+    <!-- parameterType: 输入参数的java类型 -->
+    <!-- resultType: 输出结果所映射的java类型 -->
+    <select id="findUserById" resultType="org.mybatisstudy.vo.User">
+        select * from user where id = #{id}
+    </select>
+
+    <!-- ${}:表示一个sql的连接符, ${}会原样输出 -->
+    <!-- ${value}:里面的value表示输入参数的参数名称，如果该参数是简单类型，那么${}里面的参数名称必须是value -->
+    <select id="findUsersByName" resultType="org.mybatisstudy.vo.User">
+      select * from user where username like '%${value}%'
+    </select>
+
+    <!-- selectKey:查询主键，在标签内需要输入查询主键的sql -->
+    <!-- order:指定查询主键的sql和insert语句的执行顺序，相对insert语句来说 -->
+    <!-- last_insert_id:该函是mysql函数，获取自增主键id，必须和insert语句一起使用 -->
+    <insert id="insertUser" parameterType="org.mybatisstudy.vo.User">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+        insert into user(username, birthday, sex, address)
+        values(#{username}, #{birthday}, #{sex}, #{address})
+    </insert>
+
+    <update id="updateUser" parameterType="org.mybatisstudy.vo.User">
+        update user set username=#{username}, birthday=#{birthday}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteUser">
+        delete from user where id= #{id}
+    </delete>
+
+    <select id="selectUserByList" parameterType="java.util.List" resultType="org.mybatisstudy.vo.User">
+        select * from user
+        <where>
+            <if test="list!=null">
+                <foreach collection="list" item="userId" open=" and id in ("separator="," close=")">
+                    #{userId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>
